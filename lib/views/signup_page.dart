@@ -116,7 +116,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
                             try{
                             var response = await http.post(
-                              Uri.parse('https://facebackend-0uvr.onrender.com/api/v1/posts/bittudevPost'),
+                              Uri.parse('https://api.bittudev.com/api/v1/posts/bittudevPost'),
                               headers: headers,
                               body: jsonEncode(data),
                             );
