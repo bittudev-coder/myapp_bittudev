@@ -1,15 +1,21 @@
-import 'package:awesome_bottom_bar/awesome_bottom_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
-
-
+import 'package:shared_preferences/shared_preferences.dart';
 import '../Constant/ConstColor.dart';
+import '../Constant/ConstString.dart';
 import '../Content/MyAppbar.dart';
 import '../Content/MyDrawer.dart';
 import '../Content/autoswipecontent.dart';
-import '../test.dart';
-import '../util/my_box.dart';
+import '../WidgetTool/CustomButton.dart';
+import '../WidgetTool/HeadShow.dart';
+import '../WidgetTool/Ui/Custopm_bottom_paint.dart';
+import '../WidgetTool/Ui/Tablet_top_paint.dart';
+import '../WidgetTool/Ui/custom_top_paint.dart';
+import '../WidgetTool/showHeadId.dart';
+import '../controllers/auth_service.dart';
 import '../util/my_tile.dart';
+import '../util/user__repository.dart';
+import '../views/WebView.dart';
+
 
 class MobileScaffold extends StatefulWidget {
   const MobileScaffold({Key? key}) : super(key: key);
@@ -17,151 +23,221 @@ class MobileScaffold extends StatefulWidget {
   @override
   State<MobileScaffold> createState() => _MobileScaffoldState();
 }
+
 class _MobileScaffoldState extends State<MobileScaffold> {
+  late SharedPreferences prefs;
+  GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+  bool isDarkMode = false;
+  bool isSearchMode = false;
+  double _iconSize=20;
+  TextEditingController textEditingController = TextEditingController();
 
+  void toggleDarkMode() {
+    setState(() {
+      isDarkMode = !isDarkMode;
+    });
+  }
 
-  int _selectedIndex = 0;
+  void toggleSearchMode() {
+    setState(() {
+      isSearchMode = !isSearchMode;
+    });
+  }
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        extendBody: true,
-        body: IndexedStack(
-          index: _selectedIndex,
-          children: <Widget>[
-            mobileWidgets(),
-
-            Text('services'),
-            Text("about"),
-            Text("Contact"),
-            Text("Signup"),
-          ],
-        ),
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6,horizontal: 4),
-          child: BottomBarFloating(
-            iconSize: 22,
-            enableShadow: true,
-            borderRadius: BorderRadius.circular(25),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                offset: Offset(0, 5),
-                blurRadius: 4.0,
-                spreadRadius: 1.0,
+    final double width = MediaQuery.of(context).size.width;
+    return  Scaffold(
+      backgroundColor: defaultBackgroundColor,
+      key: _drawerKey,
+      drawer: myDrawer(context),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildHeader(width),
+          Expanded(child:
+          Text("Hello")
+          ),
+          _buildMainContent(),
+          _buildFooter(width),
+        ],
+      ),
+    );
+  }
+  Widget _buildHeader(double width) {
+    return Container(
+      child: Stack(
+        children: [
+          CustomPaint(
+            size: Size(width, (350 * 0.41473214285714285).toDouble()),
+            painter: TabletTopPaint(),
+          ),
+          _buildMenuButton(),
+          _buildHeaderContent(width),
+        ],
+      ),
+    );
+  }
+  Widget _buildMenuButton() {
+    return Positioned(
+      top: 40,
+      left: 10,
+      child: InkWell(
+        onTap: () {
+          _drawerKey.currentState!.openDrawer();
+        },
+        child: ClipOval(
+          child: Container(
+            color: headColor,
+            width: 40.0,
+            height: 40.0,
+            child: Center(
+              child: Icon(
+                Icons.menu,
+                color: Colors.white,
+                size: 20.0,
               ),
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                offset: Offset(0, 10),
-                blurRadius: 10.0,
-                spreadRadius: 0,
-              ),
-            ],
-            titleStyle: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontFamily: 'fonts/OpenSans-Light.ttf',
-              letterSpacing: 0,
-              fontSize: 12,
             ),
-            items: _bottomNavigationBarItems,
-            backgroundColor: bodyColor,
-            color: Color.fromARGB(255, 4, 4, 4),
-            colorSelected: headColor,
-            indexSelected: _selectedIndex,
-            onTap: (int index) {
-              setState(() {
-                _selectedIndex = index;
-                // Update live and list states based on index
-
-              });
-            },
-
           ),
         ),
-
       ),
     );
   }
-  List<TabItem> get _bottomNavigationBarItems => [
-    TabItem(
-      icon: _selectedIndex == 0
-          ? Icons.dashboard
-          : Icons.dashboard_outlined,
-      title: 'Home',
-    ),
-    TabItem(
-      icon: _selectedIndex == 1
-          ? Icons.miscellaneous_services
-          : Icons.miscellaneous_services_outlined,
-      title: 'Services',
-    ),
-    TabItem(
-      icon: _selectedIndex == 2
-          ? Icons.person
-          : Icons.person_outline,
-      title: 'Abouts',
-    ),
-    TabItem(
-      icon: _selectedIndex == 3
-          ? Icons.call
-          : Icons.call_outlined,
-      title: 'Contact',
-    ),  TabItem(
-      icon: _selectedIndex == 4
-          ? Icons.account_circle
-          : Icons.account_circle_outlined,
-      title: 'Account',
-    ),
-  ];
-}
 
-
-
-// navigator bar add
-
-
-class mobileWidgets extends StatefulWidget {
-  const mobileWidgets({super.key});
-
-  @override
-  State<mobileWidgets> createState() => _mobileWidgetsState();
-}
-
-
-class _mobileWidgetsState extends State<mobileWidgets> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: defaultBackgroundColor,
-      appBar: myAppBar,
-      // drawer: myDrawer,
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
+  Widget _buildHeaderContent(double width) {
+    return Positioned(
+      left: 130,
+      top: 20,
+      child: Container(
+        width: width - 200,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // first 4 boxes in grid
-            AspectRatio(
-              aspectRatio: 2.5,
-              child: SizedBox(
-                width: double.infinity,
-                child: AutoSwipePageView(),
+            SizedBox(width: 20),
+            if (width > 750)
+              if (isSearchMode && width < 1300)
+                Container()
+              else
+                const HeadshowText(txtSize: 30),
+            if (isSearchMode)
+              SizedBox(
+                width: 200,
+                height: 50,
+                child: CustomInputField(
+                  textEditingController: textEditingController,
+                ),
               ),
-            ),
+            _buildSearchAndDarkModeIcons(width),
 
-            // list of previous days
-            Expanded(
-              child: ListView.builder(
-                itemCount: 4,
-                itemBuilder: (context, index) {
-                  return const MyTile();
-                },
-              ),
-            ),
           ],
         ),
       ),
     );
   }
+
+  Widget _buildSearchAndDarkModeIcons(double width) {
+    return Row(
+      children: [
+        IconButton(
+          color: Colors.white,
+          onPressed: toggleSearchMode,
+          icon: Icon(isSearchMode ? Icons.close : Icons.search),
+          iconSize: _iconSize,
+        ),
+        SizedBox(width: _iconSize-10),
+        if (width < 750 && !isSearchMode)
+          IconButton(
+            color: Colors.white,
+            onPressed: toggleDarkMode,
+            icon: Icon(isDarkMode ? Icons.dark_mode : Icons.light_mode),
+            iconSize: _iconSize,
+          ),
+        if (width > 750)
+          IconButton(
+            color: Colors.white,
+            onPressed: toggleDarkMode,
+            icon: Icon(isDarkMode ? Icons.dark_mode : Icons.light_mode),
+            iconSize: _iconSize,
+          ),
+        SizedBox(width: _iconSize-10,),
+        _buildLoginButton(width),
+      ],
+    );
+  }
+
+  Widget _buildLoginButton(double width) {
+    if (width < 750 && !isSearchMode) {
+      return UserRepository.getLoginState()? CustomContainer(text: UserRepository.getEmail()!,):
+      CustomButton(text: login,onTap: (){
+        Navigator.pushNamed(context, "/login");
+      },);
+    }
+    if (width > 750) {
+      return UserRepository.getLoginState()? CustomContainer(text: UserRepository.getEmail()!,):
+      CustomButton(text: login,onTap: (){
+        Navigator.pushNamed(context, "/login");
+      },);
+    }
+    return Container();
+  }
+
+
+  // MAin Content
+  Widget _buildMainContent() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: Text(
+        'Based on your birthdate, I will calculate how many days are left until your next birthday.',
+        style: TextStyle(
+          fontSize: 18,
+          height: 1.5,
+          fontWeight: FontWeight.w400,
+          fontFamily: 'roboto',
+          color: bodyColor,
+        ),
+      ),
+    );
+  }
+
+
+  // Fotter
+  Widget _buildFooter(double width) {
+    return Container(
+      child: Stack(
+        children: [
+          CustomPaint(
+            size: Size(width, (399 * 0.31473214285714285).toDouble()),
+            painter: CustomBottomPaint(),
+          ),
+          _buildChatButton(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChatButton() {
+    return Positioned(
+      bottom: 40,
+      right: 10,
+      child: InkWell(
+        onTap: () {
+          print("Button Pressed!");
+        },
+        child: ClipOval(
+          child: Container(
+            color: headColor,
+            width: 40.0,
+            height: 40.0,
+            child: Center(
+              child: Icon(
+                Icons.mark_unread_chat_alt_outlined,
+                color: Colors.white,
+                size: 20.0,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
-
-
