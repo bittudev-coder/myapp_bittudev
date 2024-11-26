@@ -122,7 +122,7 @@ class MyApp extends StatelessWidget {
         "/login": (context) => LoginPage(),
         "/home": (context) => ResponsiveLayout(
           mobileBody: const MobileScaffold(),
-          tabletBody:  TabletScaffold(),
+          tabletBody:  const TabletScaffold(),
           desktopBody: const DesktopScaffold(),
         ),
         "/message": (context) => Message()
