@@ -27,7 +27,7 @@ class _SignUpPageState extends State<SignUpPage> {
           padding: const EdgeInsets.all(8.0),
           child: Container(
             width: 400,  // Fixed width of the signup form
-            height: 400, // Fixed height of the signup form
+            height: 450, // Fixed height of the signup form
             padding: const EdgeInsets.all(16.0), // Add padding inside the container
             decoration: BoxDecoration(
               color: Colors.white, // Background color of the form itself

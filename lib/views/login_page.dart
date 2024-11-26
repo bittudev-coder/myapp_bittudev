@@ -22,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
           padding: const EdgeInsets.all(8.0),
           child: Container(
             width: 400,  // Set the fixed width of the login form
-            height: 350, // Set the fixed height of the login form
+            height: 400, // Set the fixed height of the login form
             padding: const EdgeInsets.all(16.0), // Add padding inside the container
             decoration: BoxDecoration(
               color: Colors.white, // Background color of the form itself
