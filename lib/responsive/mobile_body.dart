@@ -105,33 +105,37 @@ class _MobileScaffoldState extends State<MobileScaffold> {
 
   Widget _buildHeaderContent(double width) {
     return Positioned(
-      left: 130,
+      left: 80,
       top: 20,
       child: Container(
-        width: width - 200,
+        width: MediaQuery.of(context).size.width,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(width: 20),
-            if (width > 750)
-              if (isSearchMode && width < 1300)
-                Container()
-              else
-                const HeadshowText(txtSize: 30),
+            // Show HeadshowText if width > 750 and not in search mode, or if search mode is not active
+            if (width > 750 && !(isSearchMode && width < 1300))
+              const HeadshowText(txtSize: 30),
+
+            // Show search field when in search mode
             if (isSearchMode)
               SizedBox(
                 width: 200,
-                height: 50,
+                height: 40,
                 child: CustomInputField(
                   textEditingController: textEditingController,
                 ),
               ),
-            _buildSearchAndDarkModeIcons(width),
 
+            // Display search and dark mode icons
+            _buildSearchAndDarkModeIcons(width),
+            SizedBox(
+              width: 20,
+            )
           ],
         ),
-      ),
+      )
+      ,
     );
   }
 
@@ -144,7 +148,7 @@ class _MobileScaffoldState extends State<MobileScaffold> {
           icon: Icon(isSearchMode ? Icons.close : Icons.search),
           iconSize: _iconSize,
         ),
-        SizedBox(width: _iconSize-10),
+        SizedBox(width: _iconSize),
         if (width < 750 && !isSearchMode)
           IconButton(
             color: Colors.white,
