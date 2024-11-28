@@ -35,7 +35,7 @@ class PushNotifications {
         token = await _firebaseMessaging.getToken(
             vapidKey:
                 "BIo9NM-uq0YQ8aeHkv_Bad1VKh_NaGuHRlKpNi50PI-M9RDlq29kdFoAbLjvtONZ-uABdjM4fG7_DAEKeYjpBn0");
-        // print("for web device token: $token");
+        print("for web device token: $token");
         UserRepository.setToken(token!);
       } else {
         // get the device fcm token
