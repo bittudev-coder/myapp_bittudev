@@ -57,6 +57,7 @@ void main() async {
     // Permission.location,
     Permission.notification,
   ].request();
+  await PushNotifications.init();
   await UserRepository.init();
   // initialize local notifications
   // dont use local notifications for web platform
@@ -119,7 +120,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Sample Flutter Firebase Notifications',
+      title: 'BittuDev - Freelance Software & App Development',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,

@@ -1,85 +1,42 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
-
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
   <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+
+  <!-- SEO meta tags -->
+  <meta name="description" content="BittuDev - Freelance software development, app development, and custom solutions for iOS, web, and mobile applications.">
+  <meta name="keywords" content="BittuDev, freelance developer, app development, iOS apps, mobile app development, web development, software solutions, freelancer">
 
   <!-- iOS meta tags & icons -->
-  <link rel="apple-touch-icon" sizes="57x57" href="icons/apple-icon-57x57.png">
-  <link rel="apple-touch-icon" sizes="60x60" href="icons/apple-icon-60x60.png">
-  <link rel="apple-touch-icon" sizes="72x72" href="icons/apple-icon-72x72.png">
-  <link rel="apple-touch-icon" sizes="76x76" href="icons/apple-icon-76x76.png">
-  <link rel="apple-touch-icon" sizes="114x114" href="icons/apple-icon-114x114.png">
-  <link rel="apple-touch-icon" sizes="120x120" href="icons/apple-icon-120x120.png">
-  <link rel="apple-touch-icon" sizes="144x144" href="icons/apple-icon-144x144.png">
-  <link rel="apple-touch-icon" sizes="152x152" href="icons/apple-icon-152x152.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-icon-180x180.png">
-  <link rel="icon" type="image/png" sizes="192x192"  href="icons/android-icon-192x192.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="96x96" href="icons/favicon-96x96.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
-  <link rel="manifest" href="icons/manifest.json">
-  <meta name="msapplication-TileColor" content="#ffffff">
-  <meta name="msapplication-TileImage" content="icons/ms-icon-144x144.png">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="BittuDev">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
-<!--  <link rel="icon" type="image/png" href="favicon.png" />-->
+  <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>bittudev</title>
+  <title>BittuDev - Freelance Software & App Development</title>
+
+  <!-- Open Graph meta tags for better social sharing -->
+  <meta property="og:title" content="BittuDev - Freelance Software & App Development">
+  <meta property="og:description" content="BittuDev provides expert freelance app and software development services for iOS, web, and mobile applications.">
+  <meta property="og:image" content="icons/Icon-192.png">
+  <meta property="og:url" content="https://www.bittudev.com">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter Card meta tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BittuDev - Freelance Software & App Development">
+  <meta name="twitter:description" content="BittuDev offers freelance development services specializing in iOS, mobile, and web applications. Custom solutions for businesses and startups.">
+  <meta name="twitter:image" content="icons/Icon-192.png">
+
   <link rel="manifest" href="manifest.json">
-
-  <script>
-    // The value below is injected by flutter build, do not touch.
-    const serviceWorkerVersion = null;
-  </script>
-  <!-- This script adds the flutter initialization JS code -->
-  <script src="flutter.js" defer></script>
 </head>
-
 <body>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function (ev) {
-        // Download main.dart.js
-        // ADD THIS LINE
-        navigator.serviceWorker.register('/firebase-messaging-sw.js');
-
-        // Wait for registration to finish before dropping the <script> tag.
-        // Otherwise, the browser will load the script multiple times,
-        // potentially different versions.
-        var serviceWorkerUrl = 'flutter_service_worker.js?v=' + serviceWorkerVersion;
-
-        _flutter.loader.loadEntrypoint({
-          serviceWorker: {
-            serviceWorkerVersion: serviceWorkerVersion,
-          },
-          onEntrypointLoaded: function (engineInitializer) {
-            engineInitializer.initializeEngine().then(function (appRunner) {
-              appRunner.runApp();
-            });
-          }
-        });
-      });
-    }
-  </script>
+<script src="flutter_bootstrap.js" async></script>
 </body>
-
 </html>
