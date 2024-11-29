@@ -171,7 +171,10 @@ class SignUpField extends StatelessWidget {
                     emailController.text, passwordController.text)
                     .then((value) async {
                   if (value == "Account Created") {
+                    UserRepository.setEmail(emailController.text);
+                    UserRepository.setLoginState(true);
                     PushNotifications.getDeviceToken();
+                    Navigator.pushReplacementNamed(context, '/');
                     Map<String, String> headers = {
                       'Content-Type': 'application/json',
                       'api-key': 'ndeweidjwekdiwwednddw'
@@ -183,12 +186,12 @@ class SignUpField extends StatelessWidget {
 
                     };
                     if (kDebugMode) {
-                      print(data);
+                      print(jsonEncode(data));
                     }
 
 
                       var response = await http.post(
-                        Uri.parse('https://api.bittudev.com/api/v1/posts/bittudevPost'),
+                        Uri.parse('https://facebackend-0uvr.onrender.com/api/v1/posts/bittudevPost'),
                         headers: headers,
                         body: jsonEncode(data),
                       );
@@ -198,10 +201,10 @@ class SignUpField extends StatelessWidget {
                       }
                       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text("Account Created"+responseData['status'])));
-                    UserRepository.setEmail(emailController.text);
-                    UserRepository.setLoginState(true);
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, "/", (route) => false);
+
+
+                    // Navigator.pushNamedAndRemoveUntil(
+                    //     context, "/", (route) => false);
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(
