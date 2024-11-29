@@ -108,7 +108,8 @@ class _TabletScaffoldState extends State<TabletScaffold> {
       left: 160,
       top: 20,
       child: Container(
-        width: width - 200,
+// color: Colors.red,
+        width: width - 170,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,

@@ -9,39 +9,64 @@ class CustomContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(// Height of the container
+    return Container(
+      width: 130, // Width of the container
+      height: 50, // Height of the container
       decoration: BoxDecoration(
-        color: Colors.blueAccent, // Background color of the container
-        borderRadius: BorderRadius.circular(8), // Rounded corners for the container
+        color: Colors.white, // Background color
+        borderRadius: BorderRadius.circular(12), // Rounded corners
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3), // Shadow color
+            blurRadius: 8, // Soft blur radius
+            offset: Offset(4, 4), // Shadow position
+          ),
+        ],
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start, // Align children to the start (left)
-        crossAxisAlignment: CrossAxisAlignment.center, // Align vertically centered
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          // Icon (person icon)
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: CircleAvatar(
-              radius: 12, // Radius of the icon
-              backgroundColor: Colors.white,
-              child: Icon(Icons.person, color: Colors.blueAccent),
+          // Profile Image/Icon
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10), // Rounded corners for image
+            child: Image.asset(
+              'assets/logo.png', // Add your image path here
+              width: 40, // Width of the profile image
+              height: 40, // Height of the profile image
+              fit: BoxFit.cover, // Makes sure the image fits well
             ),
           ),
-
+          SizedBox(width: 10), // Space between image and text
           // Email Text
-          Padding(
-            padding: const EdgeInsets.only(right: 6),
-            child: Text(
-              text.substring(5, 15), // Get only the first 15 characters
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-              ),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Your Email", // Label text
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  text, // Email text
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey[600],
+                  ),
+                  overflow: TextOverflow.ellipsis, // Ensures long email doesn't overflow
+                ),
+              ],
             ),
           ),
-
         ],
       ),
     );
   }
+
+
 }

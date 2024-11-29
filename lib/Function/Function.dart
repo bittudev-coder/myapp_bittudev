@@ -186,7 +186,7 @@ class SignUpField extends StatelessWidget {
                       print(data);
                     }
 
-                    try{
+
                       var response = await http.post(
                         Uri.parse('https://api.bittudev.com/api/v1/posts/bittudevPost'),
                         headers: headers,
@@ -198,7 +198,6 @@ class SignUpField extends StatelessWidget {
                       }
                       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text("Account Created"+responseData['status'])));
-                    }catch(e){}
                     UserRepository.setEmail(emailController.text);
                     UserRepository.setLoginState(true);
                     Navigator.pushNamedAndRemoveUntil(

@@ -27,7 +27,7 @@ class PushNotifications {
   }
 
   // get the fcm device token
-  static Future getDeviceToken({int maxRetires = 3}) async {
+  static  Future getDeviceToken({int maxRetires = 3}) async {
     try {
       String? token;
       if (kIsWeb) {
