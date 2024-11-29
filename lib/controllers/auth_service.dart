@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-
 import '../util/user__repository.dart';
 import 'notification_service.dart';
 
@@ -73,12 +72,11 @@ class AuthService {
       print("User is logged in with email: $email");
       UserRepository.setEmail(email!);
       UserRepository.setLoginState(isLoggedIn);
-      Navigator.pushReplacementNamed(context, "/");
+
     } else {
       print("User is not logged in");
       UserRepository.setEmail("");
       UserRepository.setLoginState(false);
-      // Optionally navigate to a login or signup page
 
     }
   }

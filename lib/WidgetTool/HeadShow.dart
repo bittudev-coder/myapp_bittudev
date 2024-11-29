@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 import '../Constant/ConstColor.dart';
+import '../Constant/ConstString.dart';
 
 class HeadshowText extends StatelessWidget {
   final VoidCallback? onTap; // Callback function for button press
@@ -11,7 +12,7 @@ class HeadshowText extends StatelessWidget {
   const HeadshowText({
     Key? key,
     this.onTap,
-    this.text = "Software Company", // Default text
+    this.text = company_name, // Default text
     this.txtSize = 17,
   }) : super(key: key);
 

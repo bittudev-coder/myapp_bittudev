@@ -1,25 +1,10 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'package:bittudev/responsive/desktop_body.dart';
-import 'package:bittudev/responsive/mobile_body.dart';
-import 'package:bittudev/responsive/tablet_body.dart';
-import 'package:bittudev/responsive_layout.dart';
-import 'package:bittudev/util/const_repo.dart';
-import 'package:bittudev/util/user__repository.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'controllers/auth_service.dart';
 import 'controllers/notification_service.dart';
-import 'firebase_options.dart';
 import 'main.dart';
-import 'views/home_page.dart';
-import 'views/login_page.dart';
-import 'views/message.dart';
-import 'views/signup_page.dart';
 
 class ResponsiveLayout extends StatefulWidget {
   final Widget mobileBody;

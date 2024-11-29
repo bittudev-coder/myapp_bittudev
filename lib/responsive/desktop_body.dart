@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../Constant/ConstColor.dart';
 import '../Constant/ConstString.dart';
-import '../Content/MyAppbar.dart';
 import '../Content/MyDrawer.dart';
+import '../Function/Function.dart';
 import '../WidgetTool/CustomButton.dart';
 import '../WidgetTool/HeadShow.dart';
 import '../WidgetTool/Ui/Custopm_bottom_paint.dart';
@@ -108,7 +108,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                   SizedBox(width: 30,),
                   // Custom button (e.g., login)
                   UserRepository.getLoginState()?CustomContainer(text: UserRepository.getEmail()!,):CustomButton(text: login,onTap: (){
-                      Navigator.pushNamed(context, "/login");
+                    showReportDialog(context);
                   },),
                 ],)
               ],

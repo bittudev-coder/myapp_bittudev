@@ -2,19 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Constant/ConstColor.dart';
 import '../Constant/ConstString.dart';
-import '../Content/MyAppbar.dart';
 import '../Content/MyDrawer.dart';
-import '../Content/autoswipecontent.dart';
+import '../Function/Function.dart';
 import '../WidgetTool/CustomButton.dart';
 import '../WidgetTool/HeadShow.dart';
 import '../WidgetTool/Ui/Custopm_bottom_paint.dart';
 import '../WidgetTool/Ui/Tablet_top_paint.dart';
-import '../WidgetTool/Ui/custom_top_paint.dart';
 import '../WidgetTool/showHeadId.dart';
-import '../controllers/auth_service.dart';
-import '../util/my_tile.dart';
 import '../util/user__repository.dart';
-import '../views/WebView.dart';
 
 class TabletScaffold extends StatefulWidget {
   const TabletScaffold({super.key});
@@ -174,13 +169,13 @@ class _TabletScaffoldState extends State<TabletScaffold> {
     if (width < 750 && !isSearchMode) {
       return UserRepository.getLoginState()? CustomContainer(text: UserRepository.getEmail()!,):
       CustomButton(text: login,onTap: (){
-        Navigator.pushNamed(context, "/login");
+        showReportDialog(context);
       },);
     }
     if (width > 750) {
       return UserRepository.getLoginState()? CustomContainer(text: UserRepository.getEmail()!,):
       CustomButton(text: login,onTap: (){
-        Navigator.pushNamed(context, "/login");
+        showReportDialog(context);
       },);
     }
     return Container();

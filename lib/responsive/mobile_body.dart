@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../Constant/ConstColor.dart';
 import '../Constant/ConstString.dart';
 import '../Content/MyDrawer.dart';
+import '../Function/Function.dart';
 import '../WidgetTool/CustomButton.dart';
 import '../WidgetTool/HeadShow.dart';
 import '../WidgetTool/Ui/Custopm_bottom_paint.dart';
@@ -168,13 +169,13 @@ class _MobileScaffoldState extends State<MobileScaffold> {
     if (width < 750 && !isSearchMode) {
       return UserRepository.getLoginState()? CustomContainer(text: UserRepository.getEmail()!,):
       CustomButton(text: login,onTap: (){
-        Navigator.pushNamed(context, "/login");
+        showReportDialog(context);
       },);
     }
     if (width > 750) {
       return UserRepository.getLoginState()? CustomContainer(text: UserRepository.getEmail()!,):
       CustomButton(text: login,onTap: (){
-        Navigator.pushNamed(context, "/login");
+        showReportDialog(context);
       },);
     }
     return Container();
