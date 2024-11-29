@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../controllers/auth_service.dart';
+import '../util/user__repository.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -87,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
                           if (value == "Login Successful") {
                             ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text("Login Successful")));
-                            Navigator.pushReplacementNamed(context, "/");
+                            AuthService.checkLoginStatus(context);
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text(

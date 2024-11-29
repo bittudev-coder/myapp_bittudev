@@ -35,7 +35,7 @@ var myDrawer = (BuildContext context) => Drawer(
      UserRepository.getLoginState()? ClipOval(child: Navbarlisttool(name: 'L O G O U T', icon: Icons.logout,callback:()async{
         await AuthService.logout();
         UserRepository.doLogout();
-        Navigator.pushReplacementNamed(context, '/home');
+        Navigator.pushReplacementNamed(context, '/');
       },)):new Container(),
     ],
   ),
