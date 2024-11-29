@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import '../Function/Function.dart';
 import '../util/user__repository.dart';
 import 'notification_service.dart';
 
@@ -77,6 +78,7 @@ class AuthService {
       print("User is not logged in");
       UserRepository.setEmail("");
       UserRepository.setLoginState(false);
+        showReportDialog(context,true);
 
     }
   }

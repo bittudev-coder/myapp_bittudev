@@ -171,13 +171,13 @@ class _TabletScaffoldState extends State<TabletScaffold> {
     if (width < 750 && !isSearchMode) {
       return UserRepository.getLoginState()? CustomContainer(text: UserRepository.getEmail()!,):
       CustomButton(text: login,onTap: (){
-        showReportDialog(context);
+        showReportDialog(context,true);
       },);
     }
     if (width > 750) {
       return UserRepository.getLoginState()? CustomContainer(text: UserRepository.getEmail()!,):
       CustomButton(text: login,onTap: (){
-        showReportDialog(context);
+        showReportDialog(context,true);
       },);
     }
     return Container();
@@ -226,11 +226,23 @@ class _TabletScaffoldState extends State<TabletScaffold> {
             color: headColor,
             width: 60.0,
             height: 60.0,
-            child: Center(
-              child: Icon(
-                Icons.mark_unread_chat_alt_outlined,
-                color: Colors.white,
-                size: 25.0,
+            child: InkWell(
+              onTap: () {
+Navigator.pushNamed(context, '/chat');
+              },
+              child: ClipOval(
+                child: Container(
+                  color: headColor,
+                  width: 60.0,
+                  height: 60.0,
+                  child: Center(
+                    child: Icon(
+                      Icons.chat,
+                      color: Colors.white,
+                      size: 25.0,
+                    ),
+                  ),
+                ),
               ),
             ),
           ),

@@ -169,13 +169,13 @@ class _MobileScaffoldState extends State<MobileScaffold> {
     if (width < 750 && !isSearchMode) {
       return UserRepository.getLoginState()? CustomContainer(text: UserRepository.getEmail()!,):
       CustomButton(text: login,onTap: (){
-        showReportDialog(context);
+        showReportDialog(context,true);
       },);
     }
     if (width > 750) {
       return UserRepository.getLoginState()? CustomContainer(text: UserRepository.getEmail()!,):
       CustomButton(text: login,onTap: (){
-        showReportDialog(context);
+        showReportDialog(context,true);
       },);
     }
     return Container();

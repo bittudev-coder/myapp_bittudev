@@ -108,7 +108,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                   SizedBox(width: 30,),
                   // Custom button (e.g., login)
                   UserRepository.getLoginState()?CustomContainer(text: UserRepository.getEmail()!,):CustomButton(text: login,onTap: (){
-                    showReportDialog(context);
+                    showReportDialog(context,true);
                   },),
                 ],)
               ],

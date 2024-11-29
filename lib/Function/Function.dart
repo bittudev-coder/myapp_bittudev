@@ -11,7 +11,7 @@ import '../util/user__repository.dart';
 
 
 
-void showReportDialog(BuildContext context) {
+void showReportDialog(BuildContext context,bool route) {
   bool signupIfLogin = true; // Initialize this state outside of the builder
   double width=380;
   Dialog simpleDialog = Dialog(
@@ -53,7 +53,7 @@ void showReportDialog(BuildContext context) {
                   ],
                 ),
                 // Toggle between Login and SignUp based on signupIfLogin value
-                signupIfLogin ? LoginField() : SignUpField(),
+                signupIfLogin ? LoginField(route: route,) : SignUpField(route: route,),
                 // Conditional Row for toggling between Login/SignUp
                 signupIfLogin
                     ? Row(
@@ -110,6 +110,11 @@ void showReportDialog(BuildContext context) {
 
 // Signup Page Field
 class SignUpField extends StatelessWidget {
+  final bool route;
+  SignUpField({
+    Key? key,
+     this.route=false, // You can now pass IconData instead of an Icon widget
+  });
 
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -174,7 +179,10 @@ class SignUpField extends StatelessWidget {
                     UserRepository.setEmail(emailController.text);
                     UserRepository.setLoginState(true);
                     PushNotifications.getDeviceToken();
-                    Navigator.pushReplacementNamed(context, '/');
+                    if(route){
+                    Navigator.pushReplacementNamed(context, '/');}else{
+                      Navigator.pop(context);
+                    }
                     Map<String, String> headers = {
                       'Content-Type': 'application/json',
                       'api-key': 'ndeweidjwekdiwwednddw'
@@ -242,6 +250,14 @@ class SignUpField extends StatelessWidget {
 //Login APge Field
 
 class LoginField extends StatelessWidget {
+
+  final bool route;
+  LoginField({
+    Key? key,
+    this.route=false, // You can now pass IconData instead of an Icon widget
+  });
+
+
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -297,7 +313,12 @@ class LoginField extends StatelessWidget {
                             UserRepository.setLoginState(true);
                             UserRepository.setEmail(emailController.text);
                         if (value == "Login Successful") {
-                          Navigator.pushReplacementNamed(context, '/');
+                          if(route) {
+                            Navigator.pushReplacementNamed(context, '/');
+                          }else{
+                            Navigator.pop(context);
+                          }
+
                           ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text("Login Successful")));
 
