@@ -165,6 +165,7 @@ class _TabletScaffoldState extends State<TabletScaffold> {
     );
   }
 
+
   Widget _buildLoginButton(double width) {
     if (width < 750 && !isSearchMode) {
       return UserRepository.getLoginState()? CustomContainer(text: UserRepository.getEmail()!,):
