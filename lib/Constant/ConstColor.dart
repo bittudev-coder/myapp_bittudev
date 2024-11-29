@@ -10,9 +10,9 @@ var drawerTextColor = TextStyle(
 
 
 
-
-Color headColor = const Color(0xFF010718);
-Color bodyColor = const Color(0xFFE4E9F7);
+final bool colorDrak=true;
+Color headColor = !colorDrak ?const Color(0xFFFB88F6): const Color(0xFF010718);
+Color bodyColor = colorDrak ?const Color(0xFFE4E9F7):const Color(0xFF010718);
 Color navbarColor = const Color(0xFF010718);
 
 

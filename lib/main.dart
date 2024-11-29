@@ -69,7 +69,8 @@ class MyApp extends StatelessWidget {
           tabletBody:  const TabletScaffold(),
           desktopBody: const DesktopScaffold(),
         ),
-        "/message": (context) => Message()
+        "/message": (context) => Message(),
+        "/chat": (context) => ChatScreen()
       },
     );
   }

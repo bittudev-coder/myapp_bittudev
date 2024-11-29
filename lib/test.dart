@@ -1,67 +1,83 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class CustomContainer1 extends StatelessWidget {
+import 'Function/Function.dart';
+
+class ChatScreen extends StatefulWidget {
+  @override
+  _ChatScreenState createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+  final _messageController = TextEditingController();
+  final _auth = FirebaseAuth.instance;
+
+  void _sendMessage() {
+    final user = _auth.currentUser;
+    if (_messageController.text.isNotEmpty && user != null) {
+      FirebaseFirestore.instance.collection('chats').add({
+        'text': _messageController.text,
+        'createdAt': Timestamp.now(),
+        'userId': user.uid,
+      });
+      _messageController.clear();
+    }else{
+
+        showReportDialog(context,false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
-      body: Center(
-        child: Container(
-          width: 200, // Width of the container
-          height: 100, // Height of the container
-          decoration: BoxDecoration(
-            color: Colors.white, // Background color
-            borderRadius: BorderRadius.circular(12), // Rounded corners
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.3), // Shadow color
-                blurRadius: 8, // Soft blur radius
-                offset: Offset(4, 4), // Shadow position
-              ),
-            ],
+      appBar: AppBar(
+        title: Text('Chat Us'),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('chats')
+                  .orderBy('createdAt', descending: true)
+                  .snapshots(),
+              builder: (ctx, chatSnapshot) {
+                if (chatSnapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                final chatDocs = chatSnapshot.data!.docs;
+                return ListView.builder(
+                  reverse: true,
+                  itemCount: chatDocs.length,
+                  itemBuilder: (ctx, index) {
+                    return ListTile(
+                      title: Text(chatDocs[index]['text']),
+                    );
+                  },
+                );
+              },
+            ),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Icon/Image
-              CircleAvatar(
-                radius: 24, // Icon/Image size
-                backgroundColor: Colors.blueAccent, // Background for the icon
-                child: Icon(
-                  Icons.email, // Email icon
-                  color: Colors.white,
-                  size: 28,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _messageController,
+                    decoration: InputDecoration(labelText: 'Send a message'),
+                  ),
                 ),
-              ),
-              SizedBox(width: 16), // Space between icon and email
-              // Email Text
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Your Email", // Placeholder
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    "example@email.com", // Replace with actual email
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                IconButton(
+                  icon: Icon(Icons.send),
+                  onPressed: _sendMessage,
+                ),
+              ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
 }
-
