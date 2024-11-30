@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 
 class CustomContainer extends StatelessWidget {
   final String text;
+  final String name;
   CustomContainer({
     Key? key,
-   required this.text, // You can now pass IconData instead of an Icon widget
+   required this.text, required this.name, // You can now pass IconData instead of an Icon widget
   });
 
   @override
@@ -29,14 +30,14 @@ class CustomContainer extends StatelessWidget {
           // Profile Image/Icon
           ClipRRect(
             borderRadius: BorderRadius.circular(10), // Rounded corners for image
-            child: Image.asset(
+            child: true ?Icon(Icons.account_circle): Image.asset(
               'assets/logo.png', // Add your image path here
               width: 40, // Width of the profile image
               height: 40, // Height of the profile image
               fit: BoxFit.cover, // Makes sure the image fits well
             ),
           ),
-          SizedBox(width: 10), // Space between image and text
+          SizedBox(width: 5), // Space between image and text
           // Email Text
           Expanded(
             child: Column(
@@ -44,14 +45,14 @@ class CustomContainer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Your Email", // Label text
+                  name, // Label text
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 14,
                     fontWeight: FontWeight.w500,
                     color: Colors.black,
                   ),
                 ),
-                SizedBox(height: 4),
+                SizedBox(height: 2),
                 Text(
                   text, // Email text
                   style: TextStyle(

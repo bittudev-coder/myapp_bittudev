@@ -53,7 +53,7 @@ class _CreateGroupState extends State<CreateGroup> {
     });
 
     Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => HomeScreen()), (route) => false);
+        MaterialPageRoute(builder: (_) => ChatBoat()), (route) => false);
   }
 
   @override

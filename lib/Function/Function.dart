@@ -1,6 +1,7 @@
+
 import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -111,18 +112,26 @@ void showReportDialog(BuildContext context,bool route) {
 
 
 // Signup Page Field
-class SignUpField extends StatelessWidget {
+class SignUpField extends StatefulWidget {
   final bool route;
   SignUpField({
     Key? key,
      this.route=false, // You can now pass IconData instead of an Icon widget
   });
 
+  @override
+  State<SignUpField> createState() => _SignUpFieldState();
+}
 
-  FirebaseFirestore _firestore=FirebaseFirestore.instance;
+class _SignUpFieldState extends State<SignUpField> {
+
   TextEditingController nameController = TextEditingController();
+
   TextEditingController emailController = TextEditingController();
+
   TextEditingController passwordController = TextEditingController();
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     // Returning a Column widget
@@ -175,71 +184,74 @@ class SignUpField extends StatelessWidget {
           width: double.infinity,
           height: 48,
           child: ElevatedButton(
-              onPressed: () async {
-                await AuthService.createAccountWithEmail(
-                    emailController.text, passwordController.text)
-                    .then((value) async {
-                  if (value == "Account Created") {
-                    var user = FirebaseAuth.instance.currentUser;
-                    user!.updateProfile(displayName: nameController.text);
-
-                    await _firestore.collection('users').doc(
-                        FirebaseAuth.instance.currentUser!.uid).set(
-                      {
-                        "name":nameController.text,
-                        "email":emailController.text,
-                        "status":"Unavailable",
-                      }
-                    );
-                    UserRepository.setEmail(emailController.text);
-                    UserRepository.setLoginState(true);
-                    PushNotifications.getDeviceToken();
-                    if(route){
-                    Navigator.pushReplacementNamed(context, '/');}else{
-                      Navigator.pop(context);
-                    }
-                    Map<String, String> headers = {
-                      'Content-Type': 'application/json',
-                      'api-key': 'ndeweidjwekdiwwednddw'
-                    };
-                    final Map<String, dynamic> data = {
-                      "name": nameController.text,
-                      "email": emailController.text,
-                      "fcmToken":UserRepository.getToken() ,
-
-                    };
-                    if (kDebugMode) {
-                      print(jsonEncode(data));
-                    }
-
-
-                      var response = await http.post(
-                        Uri.parse('https://facebackend-0uvr.onrender.com/api/v1/posts/bittudevPost'),
-                        headers: headers,
-                        body: jsonEncode(data),
-                      );
-                      final Map<String, dynamic> responseData = json.decode(response.body);
-                      if (kDebugMode) {
-                        print(responseData);
-                      }
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Account Created"+responseData['status'])));
-
-
-                    // Navigator.pushNamedAndRemoveUntil(
-                    //     context, "/", (route) => false);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(
-                        value,
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      backgroundColor: Colors.red.shade400,
-                    ));
-                  }
-                });
-              },
-              child: Text("Sign Up")),
+            onPressed:(){
+              Signup(nameController.text,emailController.text,passwordController.text);
+            },
+              // onPressed: () async {
+              //   await AuthService.createAccountWithEmail(
+              //       emailController.text, passwordController.text)
+              //       .then((value) async {
+              //     if (value == "Account Created") {
+              //       var user = FirebaseAuth.instance.currentUser;
+              //       user!.updateProfile(displayName: nameController.text);
+              //
+              //       await _firestore.collection('users').doc(
+              //           FirebaseAuth.instance.currentUser!.uid).set(
+              //         {
+              //           "name":nameController.text,
+              //           "email":emailController.text,
+              //           "status":"Unavailable",
+              //         }
+              //       );
+              //       UserRepository.setEmail(emailController.text);
+              //       UserRepository.setLoginState(true);
+              //       PushNotifications.getDeviceToken();
+              //       if(widget.route){
+              //       Navigator.pushReplacementNamed(context, '/');}else{
+              //         Navigator.pop(context);
+              //       }
+              //       Map<String, String> headers = {
+              //         'Content-Type': 'application/json',
+              //         'api-key': 'ndeweidjwekdiwwednddw'
+              //       };
+              //       final Map<String, dynamic> data = {
+              //         "name": nameController.text,
+              //         "email": emailController.text,
+              //         "fcmToken":UserRepository.getToken() ,
+              //
+              //       };
+              //       if (kDebugMode) {
+              //         print(jsonEncode(data));
+              //       }
+              //
+              //
+              //         var response = await http.post(
+              //           Uri.parse('https://facebackend-0uvr.onrender.com/api/v1/posts/bittudevPost'),
+              //           headers: headers,
+              //           body: jsonEncode(data),
+              //         );
+              //         final Map<String, dynamic> responseData = json.decode(response.body);
+              //         if (kDebugMode) {
+              //           print(responseData);
+              //         }
+              //         ScaffoldMessenger.of(context).showSnackBar(
+              //             SnackBar(content: Text("Account Created"+responseData['status'])));
+              //
+              //
+              //       // Navigator.pushNamedAndRemoveUntil(
+              //       //     context, "/", (route) => false);
+              //     } else {
+              //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              //         content: Text(
+              //           value,
+              //           style: TextStyle(color: Colors.white),
+              //         ),
+              //         backgroundColor: Colors.red.shade400,
+              //       ));
+              //     }
+              //   });
+              // },
+              child: isLoading?CircularProgressIndicator(): Text("Sign Up")),
         ),
         SizedBox(
           height: 10,
@@ -259,12 +271,76 @@ class SignUpField extends StatelessWidget {
       ],
     );
   }
+
+  void Signup(String name,String email,String password){
+    if (name.isNotEmpty &&
+        email.isNotEmpty &&
+        password.isNotEmpty) {
+      setState(() {
+        isLoading = true;
+      });
+
+      createAccount(name, email, password).then((user) async {
+        if (user != null) {
+
+                UserRepository.setEmail(email);
+                UserRepository.setLoginState(true);
+                UserRepository.setName(name);
+                PushNotifications.getDeviceToken();
+                Navigator.pushNamed(context, '/');
+                setState(() {
+                  isLoading = false;
+                });
+                Map<String, String> headers = {
+                  'Content-Type': 'application/json',
+                  'api-key': 'ndeweidjwekdiwwednddw'
+                };
+                final Map<String, dynamic> data = {
+                  "name": nameController.text,
+                  "email": emailController.text,
+                  "fcmToken":UserRepository.getToken() ,
+
+                };
+                  var response = await http.post(
+                    Uri.parse('https://facebackend-0uvr.onrender.com/api/v1/posts/bittudevPost'),
+                    headers: headers,
+                    body: jsonEncode(data),
+                  );
+                  final Map<String, dynamic> responseData = json.decode(response.body);
+                  if (kDebugMode) {
+                    print(responseData);
+                  }
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Account Created"+responseData['status'])));
+
+
+          //       if(widget.route){
+          //       Navigator.pushReplacementNamed(context, '/');}else{
+          //         Navigator.pop(context);
+          //       }
+
+
+          // print("Account Created Sucessfull");
+        } else {
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //     SnackBar(content: Text()));
+          print("Login Failed");
+          setState(() {
+            isLoading = false;
+          });
+        }
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Please enter Fields")));
+    }
+  }
 }
 
 
 //Login APge Field
 
-class LoginField extends StatelessWidget {
+class LoginField extends StatefulWidget {
 
   final bool route;
   LoginField({
@@ -272,10 +348,15 @@ class LoginField extends StatelessWidget {
     this.route=false, // You can now pass IconData instead of an Icon widget
   });
 
+  @override
+  State<LoginField> createState() => _LoginFieldState();
+}
 
+class _LoginFieldState extends State<LoginField> {
   TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
 
+  TextEditingController passwordController = TextEditingController();
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     // Returning a Column widget
@@ -321,34 +402,40 @@ class LoginField extends StatelessWidget {
                 width: double.infinity,
                 height: 48,
                 child: ElevatedButton(
-                    onPressed: () async {
-                      await AuthService.loginWithEmail(
-                          emailController.text, passwordController.text)
-                          .then((value) {
-                            UserRepository.setLoginState(true);
-                            UserRepository.setEmail(emailController.text);
-                        if (value == "Login Successful") {
-                          if(route) {
-                            Navigator.pushReplacementNamed(context, '/');
-                          }else{
-                            Navigator.pop(context);
-                          }
+                  onPressed: (){
+                    LoginFunc(emailController.text,passwordController.text);
+                  },
+                    // onPressed: () async {
+                    //   await AuthService.loginWithEmail(
+                    //       emailController.text, passwordController.text)
+                    //       .then((value) {
+                    //         UserRepository.setLoginState(true);
+                    //         UserRepository.setEmail(emailController.text);
+                    //     if (value == "Login Successful") {
+                    //       if(widget.route) {
+                    //         Navigator.pushReplacementNamed(context, '/');
+                    //       }else{
+                    //         Navigator.pop(context);
+                    //       }
+                    //
+                    //       ScaffoldMessenger.of(context).showSnackBar(
+                    //           const SnackBar(content: Text("Login Successful")));
+                    //
+                    //     } else {
+                    //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    //         content: Text(
+                    //           value,
+                    //           style: TextStyle(color: Colors.white),
+                    //         ),
+                    //         backgroundColor: Colors.red.shade400,
+                    //       ));
+                    //     }
+                    //   });
+                    // },
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text("Login Successful")));
 
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(
-                              value,
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            backgroundColor: Colors.red.shade400,
-                          ));
-                        }
-                      });
-                    },
-                    child: Text("Login")),
+
+                    child: isLoading?CircularProgressIndicator(): Text("Login")),
               ),
               SizedBox(
                 height: 10,
@@ -359,4 +446,45 @@ class LoginField extends StatelessWidget {
       ],
     );
   }
+ void LoginFunc(String email,String paassword){
+   if (email.isNotEmpty && paassword.isNotEmpty) {
+     setState(() {
+       isLoading = true;
+     });
+
+     logIn(email, paassword).then((user) {
+       if (user != null) {
+                 UserRepository.setLoginState(true);
+                 UserRepository.setEmail(email);
+                 UserRepository.setName(user.displayName!);
+
+                       ScaffoldMessenger.of(context).showSnackBar(
+                           const SnackBar(content: Text("Login Successful")));
+
+                     // if (value == "Login Successful") {
+                     //   if(widget.route) {
+                     //     Navigator.pushReplacementNamed(context, '/');
+                     //   }else{
+                     //     Navigator.pop(context);
+                     //   }
+                Navigator.pushNamed(context, '/');
+                 setState(() {
+                   isLoading = false;
+                 });
+
+       } else {
+         print("Login Failed");
+         setState(() {
+           isLoading = false;
+         });
+       }
+     });
+   } else {
+     print("Please fill form correctly");
+   }
+ }
+
+
+
 }
+

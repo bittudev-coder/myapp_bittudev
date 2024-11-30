@@ -9,6 +9,7 @@ import '../WidgetTool/HeadShow.dart';
 import '../WidgetTool/Ui/Custopm_bottom_paint.dart';
 import '../WidgetTool/Ui/Tablet_top_paint.dart';
 import '../WidgetTool/showHeadId.dart';
+import '../controllers/auth_service.dart';
 import '../util/user__repository.dart';
 
 
@@ -167,13 +168,13 @@ class _MobileScaffoldState extends State<MobileScaffold> {
 
   Widget _buildLoginButton(double width) {
     if (width < 750 && !isSearchMode) {
-      return UserRepository.getLoginState()? CustomContainer(text: UserRepository.getEmail()!,):
+      return UserRepository.getLoginState()? CustomContainer(text: UserRepository.getEmail()!,name: UserRepository.getName()!,):
       CustomButton(text: login,onTap: (){
         showReportDialog(context,true);
       },);
     }
     if (width > 750) {
-      return UserRepository.getLoginState()? CustomContainer(text: UserRepository.getEmail()!,):
+      return UserRepository.getLoginState()? CustomContainer(text: UserRepository.getEmail()!,name: UserRepository.getName()!,):
       CustomButton(text: login,onTap: (){
         showReportDialog(context,true);
       },);
@@ -220,8 +221,13 @@ class _MobileScaffoldState extends State<MobileScaffold> {
       bottom: 40,
       right: 10,
       child: InkWell(
-        onTap: () {
-          Navigator.pushNamed(context, '/chat');
+        onTap: ()async {
+          bool isUserLoggedin = await AuthService.isLoggedIn();
+          if(isUserLoggedin){
+            Navigator.pushNamed(context, '/chat');
+          }else{
+            showReportDialog(context,true);
+          }
         },
         child: ClipOval(
           child: Container(

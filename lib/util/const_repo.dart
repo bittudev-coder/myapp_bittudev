@@ -4,4 +4,5 @@ const PREF_PASSWORD = "password";
 const PREF_URL = "url";
 const STATE = "state";
 const TOKEN = "token";
+const NAME='name';
 

@@ -9,6 +9,7 @@ import '../WidgetTool/HeadShow.dart';
 import '../WidgetTool/Ui/Custopm_bottom_paint.dart';
 import '../WidgetTool/Ui/Tablet_top_paint.dart';
 import '../WidgetTool/showHeadId.dart';
+import '../controllers/auth_service.dart';
 import '../util/user__repository.dart';
 
 class TabletScaffold extends StatefulWidget {
@@ -169,13 +170,13 @@ class _TabletScaffoldState extends State<TabletScaffold> {
 
   Widget _buildLoginButton(double width) {
     if (width < 750 && !isSearchMode) {
-      return UserRepository.getLoginState()? CustomContainer(text: UserRepository.getEmail()!,):
+      return UserRepository.getLoginState()? CustomContainer(text: UserRepository.getEmail()!,name: UserRepository.getName()!,):
       CustomButton(text: login,onTap: (){
         showReportDialog(context,true);
       },);
     }
     if (width > 750) {
-      return UserRepository.getLoginState()? CustomContainer(text: UserRepository.getEmail()!,):
+      return UserRepository.getLoginState()? CustomContainer(text: UserRepository.getEmail()!,name: UserRepository.getName()!,):
       CustomButton(text: login,onTap: (){
         showReportDialog(context,true);
       },);
@@ -216,33 +217,27 @@ class _TabletScaffoldState extends State<TabletScaffold> {
   Widget _buildChatButton() {
     return Positioned(
       bottom: 40,
-      right: 20,
+      right: 10,
       child: InkWell(
-        onTap: () {
-          print("Button Pressed!");
+        onTap: () async{
+          bool isUserLoggedin = await AuthService.isLoggedIn();
+          if(isUserLoggedin){
+            Navigator.pushNamed(context, '/chat');
+          }else{
+            showReportDialog(context,true);
+          }
+
         },
         child: ClipOval(
           child: Container(
             color: headColor,
-            width: 60.0,
-            height: 60.0,
-            child: InkWell(
-              onTap: () {
-Navigator.pushNamed(context, '/chat');
-              },
-              child: ClipOval(
-                child: Container(
-                  color: headColor,
-                  width: 60.0,
-                  height: 60.0,
-                  child: Center(
-                    child: Icon(
-                      Icons.chat,
-                      color: Colors.white,
-                      size: 25.0,
-                    ),
-                  ),
-                ),
+            width: 40.0,
+            height: 40.0,
+            child: Center(
+              child: Icon(
+                Icons.mark_unread_chat_alt_outlined,
+                color: Colors.white,
+                size: 20.0,
               ),
             ),
           ),

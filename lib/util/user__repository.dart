@@ -35,6 +35,14 @@ class UserRepository {
     prefs.setBool(STATE, state);
   }
 
+  static String? getName() {
+    return prefs.getString(NAME);
+  }
+
+  static void setName(String name) {
+    prefs.setString(NAME, name);
+  }
+
   static String? getEmail() {
     return prefs.getString(PREF_EMAIL);
   }

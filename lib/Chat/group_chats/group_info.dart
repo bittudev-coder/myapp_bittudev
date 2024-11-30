@@ -118,7 +118,7 @@ class _GroupInfoState extends State<GroupInfo> {
           .delete();
 
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => HomeScreen()),
+        MaterialPageRoute(builder: (_) => ChatBoat()),
         (route) => false,
       );
     }

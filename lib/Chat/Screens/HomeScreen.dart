@@ -2,17 +2,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import '../Authenticate/Methods.dart';
 import '../group_chats/group_chat_screen.dart';
 import 'ChatRoom.dart';
 
-class HomeScreen extends StatefulWidget {
+class ChatBoat extends StatefulWidget {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _ChatBoatState createState() => _ChatBoatState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
+class _ChatBoatState extends State<ChatBoat> with WidgetsBindingObserver {
   Map<String, dynamic>? userMap;
   bool isLoading = false;
   final TextEditingController _search = TextEditingController();
@@ -79,9 +77,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     return Scaffold(
       appBar: AppBar(
         title: Text("Home Screen"),
-        actions: [
-          IconButton(icon: Icon(Icons.logout), onPressed: () => logOut(context))
-        ],
       ),
       body: isLoading
           ? Center(
