@@ -149,7 +149,9 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
           bottom: 40,
           right: 20,
           child: InkWell(
-            onTap: () => print("Button Pressed!"),
+            onTap: (){
+              Navigator.pushNamed(context, '/chat');
+            },
             child: ClipOval(
               child: Container(
                 color: headColor,

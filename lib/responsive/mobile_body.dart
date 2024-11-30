@@ -221,7 +221,7 @@ class _MobileScaffoldState extends State<MobileScaffold> {
       right: 10,
       child: InkWell(
         onTap: () {
-          print("Button Pressed!");
+          Navigator.pushNamed(context, '/chat');
         },
         child: ClipOval(
           child: Container(

@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -116,6 +118,8 @@ class SignUpField extends StatelessWidget {
      this.route=false, // You can now pass IconData instead of an Icon widget
   });
 
+
+  FirebaseFirestore _firestore=FirebaseFirestore.instance;
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -176,6 +180,17 @@ class SignUpField extends StatelessWidget {
                     emailController.text, passwordController.text)
                     .then((value) async {
                   if (value == "Account Created") {
+                    var user = FirebaseAuth.instance.currentUser;
+                    user!.updateProfile(displayName: nameController.text);
+
+                    await _firestore.collection('users').doc(
+                        FirebaseAuth.instance.currentUser!.uid).set(
+                      {
+                        "name":nameController.text,
+                        "email":emailController.text,
+                        "status":"Unavailable",
+                      }
+                    );
                     UserRepository.setEmail(emailController.text);
                     UserRepository.setLoginState(true);
                     PushNotifications.getDeviceToken();

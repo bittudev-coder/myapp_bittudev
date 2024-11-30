@@ -43,6 +43,8 @@ class AuthService {
     return user != null;
   }
 
+
+
   static Future<Map<String, dynamic>> getUserDetails() async {
     final User? user = FirebaseAuth.instance.currentUser;
 

@@ -1,8 +1,10 @@
-import 'package:chat_app/Screens/HomeScreen.dart';
-import 'package:chat_app/group_chats/add_members.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../Screens/HomeScreen.dart';
+import 'add_members.dart';
 
 class GroupInfo extends StatefulWidget {
   final String groupId, groupName;
@@ -207,7 +209,8 @@ class _GroupInfoState extends State<GroupInfo> {
                         ? ListTile(
                             onTap: () => Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (_) => AddMembersINGroup(
+                                builder: (_) =>
+                                    AddMembersINGroup(
                                   groupChatId: widget.groupId,
                                   name: widget.groupName,
                                   membersList: membersList,

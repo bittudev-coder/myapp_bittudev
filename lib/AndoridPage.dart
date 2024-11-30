@@ -7,7 +7,6 @@ import '../Constant/ConstColor.dart';
 import '../Content/MyAppbar.dart';
 import '../Content/MyDrawer.dart';
 import '../Content/autoswipecontent.dart';
-import '../test.dart';
 import '../util/my_box.dart';
 import '../util/my_tile.dart';
 
