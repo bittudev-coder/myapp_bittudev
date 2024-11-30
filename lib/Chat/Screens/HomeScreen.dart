@@ -20,7 +20,7 @@ class _ChatBoatState extends State<ChatBoat> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     setStatus("Online");
   }
 
@@ -75,15 +75,12 @@ class _ChatBoatState extends State<ChatBoat> with WidgetsBindingObserver {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Home Screen"),
-      ),
       body: isLoading
           ? Center(
               child: Container(
                 height: size.height / 20,
                 width: size.height / 20,
-                child: CircularProgressIndicator(),
+                child:const CircularProgressIndicator(),
               ),
             )
           : Column(
@@ -151,7 +148,7 @@ class _ChatBoatState extends State<ChatBoat> with WidgetsBindingObserver {
               ],
             ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.group),
+        child:const Icon(Icons.group),
         onPressed: () => Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) => GroupChatHomeScreen(),
