@@ -18,7 +18,6 @@ class ChatRoom extends StatelessWidget {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   File? imageFile;
-
   Future getImage() async {
     ImagePicker _picker = ImagePicker();
 
