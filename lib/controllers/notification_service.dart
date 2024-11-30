@@ -60,7 +60,7 @@ class PushNotifications {
     bool isUserLoggedin = await AuthService.isLoggedIn();
     print("User is logged in $isUserLoggedin");
     if (isUserLoggedin) {
-      await CRUDService.saveUserToken(token!);
+      await CRUDService.saveUserToken(token);
       print("save to firestore");
     }
     // also save if token changes

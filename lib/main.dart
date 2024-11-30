@@ -6,10 +6,11 @@ import 'package:bittudev/responsive_layout.dart';
 import 'package:bittudev/util/user__repository.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
+import 'Chat/Screens/HomeScreen.dart';
+import 'WidgetTool/showHeadId.dart';
 import 'firebase_options.dart';
 import 'views/message.dart';
-var uuid = Uuid();
+
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -69,7 +70,7 @@ class MyApp extends StatelessWidget {
           desktopBody: const DesktopScaffold(),
         ),
         "/message": (context) => Message(),
-        // "/chat": (context) => ChatHomePage()
+        "/chat": (context) => ChatBoat()
       },
     );
   }

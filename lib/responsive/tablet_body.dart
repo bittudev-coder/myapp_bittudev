@@ -1,10 +1,5 @@
-import 'package:bittudev/Chat/pages/LoginPage.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../Chat/maploki.dart';
-import '../Chat/models/FirebaseHelper.dart';
-import '../Chat/models/UserModel.dart';
 import '../Constant/ConstColor.dart';
 import '../Constant/ConstString.dart';
 import '../Content/MyDrawer.dart';
@@ -225,33 +220,12 @@ class _TabletScaffoldState extends State<TabletScaffold> {
       right: 10,
       child: InkWell(
         onTap: () async{
-
-          User? currentUser = FirebaseAuth.instance.currentUser;
-          if(currentUser != null) {
-            // Logged In
-            UserModel? thisUserModel = await FirebaseHelper.getUserModelById(currentUser.uid);
-            if(thisUserModel != null) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) {
-                  return MyAppLoggedIn(userModel: thisUserModel, firebaseUser: currentUser);
-                }),
-              );
-
-            }else{
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => LoginPage()),
-              );
-            }
-
+          bool isUserLoggedin = await AuthService.isLoggedIn();
+          if(isUserLoggedin){
+            Navigator.pushNamed(context, '/chat');
           }else{
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => LoginPage()),
-            );
+            showReportDialog(context,true);
           }
-
 
         },
         child: ClipOval(
