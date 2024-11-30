@@ -1,12 +1,12 @@
 import 'dart:developer';
-
-import 'package:chatapp/main.dart';
-import 'package:chatapp/models/ChatRoomModel.dart';
-import 'package:chatapp/models/MessageModel.dart';
-import 'package:chatapp/models/UserModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../../main.dart';
+import '../models/ChatRoomModel.dart';
+import '../models/MessageModel.dart';
+import '../models/UserModel.dart';
 
 class ChatRoomPage extends StatefulWidget {
   final UserModel targetUser;

@@ -1,9 +1,5 @@
 import 'dart:developer';
 import 'dart:io';
-
-import 'package:chatapp/models/UIHelper.dart';
-import 'package:chatapp/models/UserModel.dart';
-import 'package:chatapp/pages/HomePage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -11,6 +7,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../models/UIHelper.dart';
+import '../models/UserModel.dart';
+import 'HomePage.dart';
 
 class CompleteProfile extends StatefulWidget {
   final UserModel userModel;

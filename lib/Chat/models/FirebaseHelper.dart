@@ -1,5 +1,7 @@
-import 'package:chatapp/models/UserModel.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'UserModel.dart';
 
 class FirebaseHelper {
 

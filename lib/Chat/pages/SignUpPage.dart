@@ -1,10 +1,12 @@
-import 'package:chatapp/models/UIHelper.dart';
-import 'package:chatapp/models/UserModel.dart';
-import 'package:chatapp/pages/CompleteProfile.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../models/UIHelper.dart';
+import '../models/UserModel.dart';
+import 'CompleteProfile.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({ Key? key }) : super(key: key);

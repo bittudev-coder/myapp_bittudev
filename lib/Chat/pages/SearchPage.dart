@@ -1,13 +1,13 @@
 import 'dart:developer';
-
-import 'package:chatapp/main.dart';
-import 'package:chatapp/models/ChatRoomModel.dart';
-import 'package:chatapp/models/UserModel.dart';
-import 'package:chatapp/pages/ChatRoomPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../../main.dart';
+import '../models/ChatRoomModel.dart';
+import '../models/UserModel.dart';
+import 'ChatRoomPage.dart';
 
 class SearchPage extends StatefulWidget {
   final UserModel userModel;
