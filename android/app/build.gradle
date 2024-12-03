@@ -1,12 +1,11 @@
+// Apply necessary plugins at the top
 plugins {
-    id "com.android.application"
-    // START: FlutterFire Configuration
-    id 'com.google.gms.google-services'
-    // END: FlutterFire Configuration
-    id "kotlin-android"
-    id "dev.flutter.flutter-gradle-plugin"
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'com.google.gms.google-services'  // Apply Google Services Plugin
 }
 
+// Load the local properties file to fetch Flutter SDK path
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -15,56 +14,41 @@ if (localPropertiesFile.exists()) {
     }
 }
 
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
-if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
+def flutterRoot = localProperties.getProperty('flutter.sdk')
+if (flutterRoot == null) {
+    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
 }
 
-def flutterVersionName = localProperties.getProperty('flutter.versionName')
-if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
-}
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode') ?: "1"
+def flutterVersionName = localProperties.getProperty('flutter.versionName') ?: "1.0.0"
+
+// Apply Flutter plugin after the android plugin and Google services
+apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    namespace "com.bittudev.bittuservices"
-    compileSdk flutter.compileSdkVersion
-    ndkVersion flutter.ndkVersion
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-    }
+    compileSdkVersion 34  // Use the latest compile SDK version
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.bittudev.bittuservices"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion 21
-        targetSdkVersion flutter.targetSdkVersion
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        applicationId "com.bittudev.bittuservices"  // Your unique app identifier
+        minSdkVersion 23  // Minimum SDK version supported by your app
+        targetSdkVersion 34  // Target SDK version for the app
+        versionCode flutterVersionCode.toInteger()  // Use the flutterVersionCode from local.properties
+        versionName flutterVersionName  // Use the flutterVersionName from local.properties
     }
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.debug  // Use your own signing configuration for release
         }
+    }
+
+    buildFeatures {
+        buildConfig true  // Enable BuildConfig if you're using custom fields
     }
 }
 
-flutter {
-    source '../..'
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"  // Kotlin standard library
+    implementation platform('com.google.firebase:firebase-bom:33.6.0')  // Firebase BOM
+    implementation 'com.google.firebase:firebase-analytics'  // Firebase Analytics
 }
-
-dependencies {}
