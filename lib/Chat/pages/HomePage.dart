@@ -1,14 +1,15 @@
-import 'package:bittudev/models/ChatRoomModel.dart';
-import 'package:bittudev/models/FirebaseHelper.dart';
-import 'package:bittudev/models/UIHelper.dart';
-import 'package:bittudev/models/UserModel.dart';
-import 'package:bittudev/pages/ChatRoomPage.dart';
-import 'package:bittudev/pages/LoginPage.dart';
-import 'package:bittudev/pages/SearchPage.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+
+import '../models/ChatRoomModel.dart';
+import '../models/FirebaseHelper.dart';
+import '../models/UserModel.dart';
+import 'ChatRoomPage.dart';
+import 'LoginPage.dart';
+import 'SearchPage.dart';
 
 class HomePage extends StatefulWidget {
   final UserModel userModel;

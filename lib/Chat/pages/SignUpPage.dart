@@ -1,10 +1,12 @@
-import 'package:bittudev/models/UIHelper.dart';
-import 'package:bittudev/models/UserModel.dart';
-import 'package:bittudev/pages/CompleteProfile.dart';
+
+import 'package:bittudev/Chat/pages/CompleteProfile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../models/UIHelper.dart';
+import '../models/UserModel.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({ Key? key }) : super(key: key);
@@ -38,38 +40,43 @@ class _SignUpPageState extends State<SignUpPage> {
   void signUp(String email, String password) async {
     UserCredential? credential;
 
-    UIHelper.showLoadingDialog(context, "Creating new account..");
+    UIHelper.showLoadingDialog(context, "Creating new account...");
 
     try {
       credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
-    } on FirebaseAuthException catch(ex) {
+    } on FirebaseAuthException catch (ex) {
       Navigator.pop(context);
-
-      UIHelper.showAlertDialog(context, "An error occured", ex.message.toString());
+      UIHelper.showAlertDialog(context, "An error occurred", ex.message.toString());
+      return;
     }
 
-    if(credential != null) {
+    if (credential != null) {
       String uid = credential.user!.uid;
+
+      // Ensure UserModel is correctly initialized and converted to map
       UserModel newUser = UserModel(
         uid: uid,
         email: email,
         fullname: "",
-        profilepic: ""
+        profilepic: "",
       );
-      await FirebaseFirestore.instance.collection("users").doc(uid).set(newUser.toMap()).then((value) {
+
+      try {
+        await FirebaseFirestore.instance.collection("users").doc(uid).set(newUser.toMap());
         print("New User Created!");
+
         Navigator.popUntil(context, (route) => route.isFirst);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) {
-              return CompleteProfile(userModel: newUser, firebaseUser: credential!.user!);
-            }
+            builder: (context) => CompleteProfile(userModel: newUser, firebaseUser: credential!.user!),
           ),
         );
-      });
+      } catch (error) {
+        Navigator.pop(context);
+        UIHelper.showAlertDialog(context, "Error saving user", "Failed to save user data to Firestore: $error");
+      }
     }
-    
   }
 
 

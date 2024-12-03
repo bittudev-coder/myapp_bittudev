@@ -1,27 +1,34 @@
 class UserModel {
-  String? uid;
-  String? fullname;
-  String? email;
-  String? profilepic;
+  String uid;
+  String email;
+  String fullname;
+  String profilepic;
 
-  UserModel({this.uid, this.fullname, this.email, this.profilepic}) {
-    // TODO: implement UserModel
-    throw UnimplementedError();
-  }
+  // Constructor
+  UserModel({
+    required this.uid,
+    required this.email,
+    required this.fullname,
+    required this.profilepic,
+  });
 
-  UserModel.fromMap(Map<String, dynamic> map) {
-    uid = map["uid"];
-    fullname = map["fullname"];
-    email = map["email"];
-    profilepic = map["profilepic"];
-  }
-
+  // Method to convert the model to a map for Firestore
   Map<String, dynamic> toMap() {
     return {
-      "uid": uid,
-      "fullname": fullname,
-      "email": email,
-      "profilepic": profilepic,
+      'uid': uid,
+      'email': email,
+      'fullname': fullname,
+      'profilepic': profilepic,
     };
+  }
+
+  // Method to create a UserModel from a map
+  factory UserModel.fromMap(Map<String, dynamic> map) {
+    return UserModel(
+      uid: map['uid'],
+      email: map['email'],
+      fullname: map['fullname'] ?? '',
+      profilepic: map['profilepic'] ?? '',
+    );
   }
 }

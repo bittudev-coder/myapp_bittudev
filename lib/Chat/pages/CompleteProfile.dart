@@ -1,9 +1,5 @@
 import 'dart:developer';
 import 'dart:io';
-
-import 'package:bittudev/models/UIHelper.dart';
-import 'package:bittudev/models/UserModel.dart';
-import 'package:bittudev/pages/HomePage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -11,6 +7,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../models/UIHelper.dart';
+import '../models/UserModel.dart';
+import 'HomePage.dart';
 
 class CompleteProfile extends StatefulWidget {
   final UserModel userModel;
@@ -36,17 +36,18 @@ class _CompleteProfileState extends State<CompleteProfile> {
   }
 
   void cropImage(XFile file) async {
-    File? croppedImage = await ImageCropper.cropImage(
-      sourcePath: file.path,
-      aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
-      compressQuality: 20
-    );
-
-    if(croppedImage != null) {
-      setState(() {
-        imageFile = croppedImage;
-      });
-    }
+    // Uncomment and implement cropping if required
+    // File? croppedImage = await ImageCropper.cropImage(
+    //   sourcePath: file.path,
+    //   aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+    //   compressQuality: 20
+    // );
+    //
+    // if(croppedImage != null) {
+    //   setState(() {
+    //     imageFile = croppedImage;
+    //   });
+    // }
   }
 
   void showPhotoOptions() {
@@ -84,9 +85,10 @@ class _CompleteProfileState extends State<CompleteProfile> {
   void checkValues() {
     String fullname = fullNameController.text.trim();
 
-    if(fullname == "" || imageFile == null) {
-      print("Please fill all the fields");
-      UIHelper.showAlertDialog(context, "Incomplete Data", "Please fill all the fields and upload a profile picture");
+    // Only check if the profile image is selected and the full name is not null (if needed)
+    if(fullname.isEmpty && imageFile == null) {
+      print("Please fill all the fields or upload a profile picture");
+      UIHelper.showAlertDialog(context, "Incomplete Data", "Please fill all the fields or upload a profile picture.");
     }
     else {
       log("Uploading data..");
@@ -95,19 +97,26 @@ class _CompleteProfileState extends State<CompleteProfile> {
   }
 
   void uploadData() async {
-
     UIHelper.showLoadingDialog(context, "Uploading image..");
 
-    UploadTask uploadTask = FirebaseStorage.instance.ref("profilepictures").child(widget.userModel.uid.toString()).putFile(imageFile!);
+    String? imageUrl = "";
 
-    TaskSnapshot snapshot = await uploadTask;
+    // If imageFile is not null, upload it to Firebase Storage
+    if (imageFile != null) {
+      UploadTask uploadTask = FirebaseStorage.instance.ref("profilepictures").child(widget.userModel.uid.toString()).putFile(imageFile!);
 
-    String? imageUrl = await snapshot.ref.getDownloadURL();
+      TaskSnapshot snapshot = await uploadTask;
+
+      imageUrl = await snapshot.ref.getDownloadURL();
+    }
+
     String? fullname = fullNameController.text.trim();
 
+    // Update UserModel with the new name and possibly profile image URL
     widget.userModel.fullname = fullname;
-    widget.userModel.profilepic = imageUrl;
+    widget.userModel.profilepic = imageUrl ?? widget.userModel.profilepic;
 
+    // Save data to Firestore
     await FirebaseFirestore.instance.collection("users").doc(widget.userModel.uid).set(widget.userModel.toMap()).then((value) {
       log("Data uploaded!");
       Navigator.popUntil(context, (route) => route.isFirst);
@@ -131,7 +140,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.symmetric(
-            horizontal: 40
+              horizontal: 40
           ),
           child: ListView(
             children: [
@@ -155,7 +164,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
               TextField(
                 controller: fullNameController,
                 decoration: InputDecoration(
-                  labelText: "Full Name",
+                  labelText: "Full Name (Optional)",
                 ),
               ),
 
