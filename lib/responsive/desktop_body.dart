@@ -65,7 +65,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                           UiHelper.CustomText(text:Wrok_with1, height: 20,fontweight: FontWeight.w700,color: Colors.black),
                         ],
                       ),
-                      Image.asset('assets/logo.png')
+                      Image.asset('assets/bittulogo.png')
                     ],
                   ),
                 )),
