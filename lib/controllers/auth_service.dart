@@ -128,7 +128,7 @@ class AuthService {
     }else{
         UserRepository.setEmail("");
         UserRepository.setLoginState(false);
-          showReportDialog(context,true);
+          // showReportDialog(context,true);
     }
 
 

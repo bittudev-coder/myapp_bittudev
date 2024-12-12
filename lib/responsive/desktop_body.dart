@@ -8,6 +8,7 @@ import '../WidgetTool/HeadShow.dart';
 import '../WidgetTool/Ui/Custopm_bottom_paint.dart';
 import '../WidgetTool/Ui/custom_top_paint.dart';
 import '../WidgetTool/showHeadId.dart';
+import '../WidgetTool/uihelper.dart';
 import '../controllers/auth_service.dart';
 import '../util/user__repository.dart';
 
@@ -50,7 +51,24 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _buildHeader(width),
-                const Spacer(),
+                Expanded(child: Container(
+                  // color: Colors.grey,
+                  child: Row(
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          UiHelper.CustomText(text:'Find & Hire', height: 50,fontweight: FontWeight.w700,color: Colors.black),
+                          UiHelper.CustomText(text:'Expert FreeLancers', height: 50,fontweight: FontWeight.w700,color: Colors.black),
+                          UiHelper.CustomText(text:Wrok_with, height: 20,fontweight: FontWeight.w700,color: Colors.black),
+                          UiHelper.CustomText(text:Wrok_with1, height: 20,fontweight: FontWeight.w700,color: Colors.black),
+                        ],
+                      ),
+                      Image.asset('assets/logo.png')
+                    ],
+                  ),
+                )),
                 _buildMainText(),
                 _buildFooter(width),
               ],

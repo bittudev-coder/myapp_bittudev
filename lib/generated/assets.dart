@@ -2,6 +2,7 @@
 class Assets {
   Assets._();
 
+  static const String assetsBittulogo = 'assets/bittulogo.png';
   static const String assetsLogo = 'assets/logo.png';
 
 }

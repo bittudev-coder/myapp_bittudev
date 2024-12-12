@@ -15,14 +15,79 @@ import 'controllers/notification_service.dart';
 import 'firebase_options.dart';
 import 'views/message.dart';
 
-
 var uuid = Uuid();
-
 final navigatorKey = GlobalKey<NavigatorState>();
 
+// Request notification permissions for iOS
+Future<void> requestNotificationPermission() async {
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
 
+  // Requesting permissions for iOS devices
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
 
-// to handle notification on foreground on web platform
+  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+    print("User granted notification permission");
+  } else if (settings.authorizationStatus == AuthorizationStatus.denied) {
+    print("User denied notification permission");
+  } else {
+    print("User has not responded to notification permission");
+  }
+}
+
+// Handle notifications when the app is in the background
+Future<void> _firebaseBackgroundMessage(RemoteMessage message) async {
+  if (message.notification != null) {
+    print("Some notification Received in background...");
+  }
+}
+
+// Initialize push notifications
+Future<void> initializePushNotifications() async {
+  await PushNotifications.init();
+
+  if (!kIsWeb) {
+    await PushNotifications.localNotiInit();
+  }
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundMessage);
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    if (message.notification != null) {
+      print("Background Notification Tapped");
+      navigatorKey.currentState!.pushNamed("/message", arguments: message);
+    }
+  });
+
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    String payloadData = jsonEncode(message.data);
+    print("Got a message in foreground");
+    if (message.notification != null) {
+      if (kIsWeb) {
+        showNotification(
+          title: message.notification!.title!,
+          body: message.notification!.body!,
+        );
+      } else {
+        PushNotifications.showSimpleNotification(
+          title: message.notification!.title!,
+          body: message.notification!.body!,
+          payload: payloadData,
+        );
+      }
+    }
+  });
+
+  final RemoteMessage? message = await FirebaseMessaging.instance.getInitialMessage();
+  if (message != null) {
+    print("Launched from terminated state");
+    Future.delayed(Duration(seconds: 1), () {
+      navigatorKey.currentState!.pushNamed("/message", arguments: message);
+    });
+  }
+}
 void showNotification({required String title, required String body}) {
   showDialog(
     context: navigatorKey.currentContext!,
@@ -42,68 +107,25 @@ void showNotification({required String title, required String body}) {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase only
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Initialize user repository
   await UserRepository.init();
 
-  Future _firebaseBackgroundMessage(RemoteMessage message) async {
-    if (message.notification != null) {
-      print("Some notification Received in background...");
-    }
-  }
-    await PushNotifications.init();
-
-    if (!kIsWeb) {
-      await PushNotifications.localNotiInit();
-    }
-
-    FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundMessage);
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      if (message.notification != null) {
-        print("Background Notification Tapped");
-        navigatorKey.currentState!.pushNamed("/message", arguments: message);
-      }
-    });
-
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      String payloadData = jsonEncode(message.data);
-      print("Got a message in foreground");
-      if (message.notification != null) {
-        if (kIsWeb) {
-          showNotification(
-              title: message.notification!.title!,
-              body: message.notification!.body!);
-        } else {
-          PushNotifications.showSimpleNotification(
-              title: message.notification!.title!,
-              body: message.notification!.body!,
-              payload: payloadData);
-        }
-      }
-    });
-
-    final RemoteMessage? message = await FirebaseMessaging.instance.getInitialMessage();
-    if (message != null) {
-      print("Launched from terminated state");
-      Future.delayed(Duration(seconds: 1), () {
-        navigatorKey.currentState!.pushNamed("/message", arguments: message);
-      });
-    }
-
-
+  // Load the app UI asynchronously
   runApp(const MyApp());
+
+  // Initialize push notifications
+  await initializePushNotifications();
 }
-
-
-
-
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -114,18 +136,15 @@ class MyApp extends StatelessWidget {
       ),
       navigatorKey: navigatorKey,
       routes: {
-        // "/":(context)=>CustomContainer1(),
-        // "/": (context) => ResponsiveLayout(
-        //   mobileBody: const MobileScaffold(),
-        //   tabletBody:  const TabletScaffold(),
-        //   desktopBody: const DesktopScaffold(),
-        // ),
-        // "/message": (context) => Message(),
-        "/": (context) => LoginPage()
+        "/": (context) => ResponsiveLayout(
+          mobileBody: const MobileScaffold(),
+          tabletBody: const TabletScaffold(),
+          desktopBody: const DesktopScaffold(),
+        ),
+        "/message": (context) => Message(),
       },
     );
   }
 }
-
 
 
